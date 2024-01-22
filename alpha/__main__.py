@@ -7,6 +7,10 @@ from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, Q
 from PySide6.QtGui import QIcon, QClipboard, QGuiApplication
 from PySide6.QtCore import Signal, Slot, QThread, QObject, QByteArray, QSize
 import json
+import dbus
+import dbus.service
+from dbus.mainloop.glib import DBusGMainLoop
+from PySide6.QtCore import QCoreApplication
 
 # Discussion of fine-tuning the whisper model:
 # https://github.com/openai/whisper/discussions/759
@@ -14,6 +18,17 @@ import json
 # For the mouse:
 # https://bbs.archlinux.org/viewtopic.php?id=145502
 # https://openrazer.github.io/
+
+
+class AlphaService(dbus.service.Object):
+    def __init__(self, app):
+        self.app = app
+        bus_name = dbus.service.BusName('com.wadeb.alpha', bus=dbus.SessionBus())
+        super().__init__(bus_name, '/com/wadeb/alpha')
+
+    @dbus.service.method('com.wadeb.alpha', in_signature='', out_signature='')
+    def ToggleRecording(self):
+        self.app.recordButton.click()
 
 
 class HistoryListItem(QListWidgetItem):
@@ -54,6 +69,7 @@ class SpeechToTextApp(QWidget):
         self.initUI()
         self.model = whisper.load_model("base")
         self.load_history()
+        self.dbus_service = AlphaService(self)
 
     def initUI(self):
         # set the app icon
@@ -182,6 +198,7 @@ class SpeechToTextApp(QWidget):
 
 
 def main():
+    DBusGMainLoop(set_as_default=True)
     app = QApplication(sys.argv)
     ex = SpeechToTextApp()
     ex.show()
