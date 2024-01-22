@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "alpha"
+version = "0.1.0"
+description = ""
+authors = ["Wade Brainerd <wadetb@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+openai-whisper = "^20231117"
+pyside6 = "^6.6.1"
+sounddevice = "^0.4.6"
+soundfile = "^0.12.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pandas = "^2.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

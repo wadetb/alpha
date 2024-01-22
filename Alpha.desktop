@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Alpha
+Comment=Transcribe speech to text
+Exec=/home/wadeb/alpha/.venv/bin/python -m alpha
+Path=/home/wadeb/alpha/
+Icon=/home/wadeb/alpha/alpha.png
+Terminal=false
+Type=Application
+Categories=Utility;
