@@ -164,6 +164,8 @@ class SpeechToTextApp(QWidget):
             else:
                 self.textEdit.setPlainText(result.text)
 
+            self.copy_to_clipboard()
+            
         else:
             self.recording = True
 
