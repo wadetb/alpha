@@ -3,5 +3,8 @@
 <node>
   <interface name="com.wadeb.alpha">
     <method name="ToggleRecording"/>
+    <methid name="IsRecording">
+      <arg type="b" name="isRecording" direction="out"/>
+    </method>
   </interface>
 </node>

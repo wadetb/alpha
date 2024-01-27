@@ -1,3 +1,4 @@
+import subprocess
 import sys
 import numpy as np
 import sounddevice as sd
@@ -29,6 +30,11 @@ class AlphaService(dbus.service.Object):
     @dbus.service.method('com.wadeb.alpha', in_signature='', out_signature='')
     def ToggleRecording(self):
         self.app.recordButton.click()
+
+    # service method to check recording status
+    @dbus.service.method('com.wadeb.alpha', in_signature='', out_signature='b')
+    def IsRecording(self):
+        return self.app.recording
 
 
 class HistoryListItem(QListWidgetItem):
@@ -157,6 +163,8 @@ class SpeechToTextApp(QWidget):
         if self.recording:
             self.recording = False
 
+            subprocess.run(["./on-stop-recording.sh"], shell=True)
+
             if self.textEdit.toPlainText() != "":
                 HistoryListItem(self.textEdit.toPlainText(), self.recordedListWidget, self)
                 self.save_history()
@@ -184,6 +192,8 @@ class SpeechToTextApp(QWidget):
             
         else:
             self.recording = True
+
+            subprocess.run(["./on-start-recording.sh"], shell=True)
 
             self.streamFile = sf.SoundFile("recording.wav", mode="w", samplerate=16000, channels=1)
             self.stream = sd.InputStream(callback=self.audio_callback, samplerate=16000, channels=1)
